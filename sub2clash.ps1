@@ -1,0 +1,1 @@
+bun run (Join-Path $PSScriptRoot "sub2clash.ts")
