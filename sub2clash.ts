@@ -64,7 +64,7 @@ async function main() {
   // 3. 拉取（内联模式，不用 provider: 前缀）
   log("══════ 拉取订阅 ══════", "c");
   const urlParam = links.join("|");
-  const subUrl = `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}&config=/base/config/ACL4SSR_Online_Full.ini&insert=true`;
+  const subUrl = `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}&config=/base/config/ACL4SSR_Online_Mini.ini&insert=true`;
 
   let body = "";
   for (let retry = 0; retry < 3; retry++) {
