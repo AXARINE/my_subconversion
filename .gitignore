@@ -20,6 +20,7 @@ __pycache__/
 # 本地配置（包含订阅链接等敏感信息）
 sub_links.txt
 my_direct.txt
+rules.txt
 
 # ACL4SSR 配置（subconverter 镜像自带，不需要提交）
 ACL4SSR_Online_Full.ini

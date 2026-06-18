@@ -1,0 +1,5 @@
+# 可选规则:
+# ACL4SSR_Online_Mini.ini   精简版
+# ACL4SSR_Online.ini        标准版
+# ACL4SSR_Online_Full.ini   完整版
+# /base/config/ACL4SSR_Online_Mini.ini

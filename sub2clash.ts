@@ -64,7 +64,23 @@ async function main() {
   // 3. 拉取（内联模式，不用 provider: 前缀）
   log("══════ 拉取订阅 ══════", "c");
   const urlParam = links.join("|");
-  const subUrl = `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}&config=/base/config/ACL4SSR_Online_Mini.ini&insert=true`;
+const RULES_FILE = `${ROOT}/rules.txt`;
+
+// ...
+
+  // 读规则选择
+  let ruleConfig = "/base/config/ACL4SSR_Online_Mini.ini";
+  if (exists(RULES_FILE)) {
+    const r = (await Bun.file(RULES_FILE).text()).split("\n")[0].trim();
+    if (r && !r.startsWith("#")) {
+      ruleConfig = r.startsWith("/") || r.startsWith("http") ? r : `/base/config/${r}`;
+    }
+  }
+  log(`  规则: ${ruleConfig.split("/").pop()}`, "d");
+
+  // ...
+
+  const subUrl = `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}&config=${ruleConfig}&insert=true`;
 
   let body = "";
   for (let retry = 0; retry < 3; retry++) {
