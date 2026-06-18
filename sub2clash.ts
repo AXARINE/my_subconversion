@@ -70,17 +70,23 @@ const RULES_FILE = `${ROOT}/rules.txt`;
 
   // 读规则选择
   let ruleConfig = "/base/config/ACL4SSR_Online_Mini.ini";
+  let useConfig = true;
   if (exists(RULES_FILE)) {
     const r = (await Bun.file(RULES_FILE).text()).split("\n")[0].trim();
     if (r && !r.startsWith("#")) {
-      ruleConfig = r.startsWith("/") || r.startsWith("http") ? r : `/base/config/${r}`;
+      if (r === "none" || r === "off") {
+        useConfig = false;
+        ruleConfig = "none";
+      } else {
+        ruleConfig = r.startsWith("/") || r.startsWith("http") ? r : `/base/config/${r}`;
+      }
     }
   }
-  log(`  规则: ${ruleConfig.split("/").pop()}`, "d");
+  log(`  规则: ${useConfig ? ruleConfig.split("/").pop() : "无外置规则"}`, "d");
 
-  // ...
-
-  const subUrl = `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}&config=${ruleConfig}&insert=true`;
+  const subUrl = useConfig
+    ? `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}&config=${ruleConfig}&insert=true`
+    : `${SUB_API}/sub?target=clash&url=${encodeURIComponent(urlParam)}`;
 
   let body = "";
   for (let retry = 0; retry < 3; retry++) {
@@ -112,7 +118,13 @@ const RULES_FILE = `${ROOT}/rules.txt`;
   // 先收集所有 proxy-groups 名
   const validGroups = new Set(["DIRECT", "REJECT", "🔰 手动选择", "♻️ 自动选择", "🛑 广告拦截"]);
   let ruleCount = 0;
-  config.rules = (config.rules || []).map((rule: string) => {
+
+  if (!useConfig) {
+    // 无外置规则 → 只用最简 3 条
+    config.rules = ["GEOIP,CN,DIRECT", "MATCH,🔰 手动选择"];
+    ruleCount = config.rules.length;
+  } else {
+    config.rules = (config.rules || []).map((rule: string) => {
     const parts = rule.split(",");
     for (let i = 0; i < parts.length; i++) {
       const field = parts[i].trim();
@@ -130,6 +142,7 @@ const RULES_FILE = `${ROOT}/rules.txt`;
     }
     return parts.join(",");
   });
+  }
 
   // 插入自定义直连域名
   for (const d of domains) {
