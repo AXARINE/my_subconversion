@@ -182,7 +182,8 @@ const RULES_FILE = `${ROOT}/rules.txt`;
   if (pyText) {
     const data = load(pyText) as any;
     const ts = Math.floor(Date.now() / 1000);
-    let items: any[] = data.items || [];
+    let items: any[] = (data.items || []).filter((i: any) =>
+      i.uid !== "direct-rules");  // 清理旧残留
     let found = false;
     for (const item of items) {
       if (item.uid === uid) {
