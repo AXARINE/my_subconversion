@@ -187,10 +187,7 @@ const RULES_FILE = `${ROOT}/rules.txt`;
     for (const item of items) {
       if (item.uid === uid) {
         found = true;
-        item.option = item.option || {};
-        for (const k of ["merge", "script", "rules", "proxies", "groups"]) delete item.option[k];
-        item.option.update_interval = 1440;
-        item.option.allow_auto_update = true;
+        item.option = { update_interval: 1440, allow_auto_update: true };
         item.updated = ts;
         break;
       }
